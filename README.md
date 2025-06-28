@@ -277,17 +277,6 @@ This project welcomes contributions and suggestions. You can make suggestions in
 4. **Push** to the branch (`git push origin feature/amazing-feature`)
 5. **Open** a Pull Request
 
-### 8.3 Thanks
-
-Thank you to all contributors who have helped improve this project and to the Windows development community for their support.
-
-## 🏆 Acknowledgments
-
-- Thanks to all contributors who have helped improve this project
-- Special thanks to the Windows development community
-- Icons and assets from various open-source projects
-- Inspired by modern Windows application design principles
-
 ---
 
 ## 📄 License
