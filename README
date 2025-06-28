@@ -1,0 +1,158 @@
+# AppX Package Installer for Windows 10/11 | Modern MSIX/AppX Installer Tool
+
+A modern, user-friendly Windows application for installing AppX and MSIX packages with a sleek drag-and-drop interface. Supports automatic dependency management, license handling, and system architecture detection.
+
+## 🏷️ Keywords
+
+`AppX installer` • `MSIX package installer` • `Windows package manager` • `Drag and drop installer` • `AppX bundle installer` • `Windows 10 package tool` • `Windows 11 MSIX tool` • `PowerShell package installer`
+
+![Installation Demo](assets/AppX_Installer.gif)
+
+## ✨ Features
+
+- **Drag & Drop Interface** - Simply drag your AppX files into the application
+- **Multiple Format Support** - Supports `.appx`, `.appxbundle`, `.msix`, and `.msixbundle` files
+- **Smart Package Detection** - Automatically identifies dependencies, main apps, and bundles
+- **Architecture Compatibility** - Checks and installs compatible packages for your system
+- **Modern UI** - Beautiful gradient design with smooth animations
+- **Installation Progress** - Real-time status updates during installation
+- **Automatic License Handling** - Searches for and applies license files when available
+
+## 🎯 How to Use
+
+![Usage Demo](assets/AppX_Installer_USE.gif)
+
+1. **Launch the application**
+2. **Drag and drop** your AppX package files into the main window
+3. **Wait for installation** - The app will automatically install all packages
+4. **Success notification** - Get confirmation when installation is complete
+
+## 📦 Supported File Types
+
+| Format | Description | Type Label |
+|--------|-------------|------------|
+| `.appx` | Application Package | APP/DEP |
+| `.appxbundle` | Bundle Package | BUNDLE |
+| `.msix` | Modern Package | APP/DEP |
+| `.msixbundle` | Modern Bundle | BUNDLE |
+
+## 🔧 Installation Priority
+
+The installer automatically handles package dependencies by installing in the correct order:
+
+1. **Dependencies** (VCLibs, NET, Xaml, WinJS) - Installed first
+2. **Main Applications** - Installed second
+3. **Bundles** - Installed last
+
+## 🛠️ System Requirements
+
+- **OS**: Windows 10/11
+- **Framework**: .NET Framework 4.7.2 or higher
+- **PowerShell**: Windows PowerShell (built-in)
+- **Privileges**: Administrator rights recommended for system-wide installation
+
+## ⚡ Technical Features
+
+### Smart Installation Logic
+- Uses PowerShell's `Add-AppxProvisionedPackage` for system-wide installation
+- Falls back to `Add-AppxPackage` for user-specific installation
+- Automatic license file detection and application
+
+### Architecture Detection
+- Automatically filters packages based on system architecture
+- Prevents installation of incompatible ARM/x64 packages on x86 systems
+
+### Error Handling
+- Graceful error handling with user-friendly messages
+- Cancellation support for long-running installations
+- Automatic cleanup on application exit
+
+## 🎨 UI States
+
+The application features three main UI states:
+
+1. **Empty State** - Drag & drop interface
+2. **Loading State** - Installation progress with spinner animation
+3. **Success State** - Completion confirmation with checkmark animation
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Visual Studio 2019 or later
+- .NET Framework 4.7.2 SDK
+- Windows 10 SDK
+
+### Building from Source
+
+```bash
+git clone https://github.com/EXLOUD/AppX-Package-Installer.git
+cd AppX-Package-Installer
+```
+
+Open the solution in Visual Studio and build the project.
+
+### Running the Application
+
+1. Build the project in Visual Studio
+2. Run the executable as Administrator (recommended)
+3. Drag and drop your AppX files to install
+
+## 📋 Usage Tips
+
+- **Administrator Mode**: Run as administrator for system-wide package installation
+- **Multiple Files**: You can drag multiple packages at once - they'll be installed in the correct order
+- **License Files**: Place license files (`.xml`) in the same directory as your packages for automatic detection
+- **Architecture**: The app automatically filters out incompatible packages based on your system architecture
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Installation Fails**
+- Ensure you're running as Administrator
+- Check if the package is compatible with your Windows version
+- Verify the package isn't corrupted
+
+**Drag & Drop Not Working**
+- Make sure the files have the correct extensions (.appx, .msix, etc.)
+- Try running the application as Administrator
+
+**PowerShell Errors**
+- Ensure PowerShell execution policy allows script execution
+- Check Windows Update for the latest PowerShell version
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**EXLOUD**
+- GitHub: [@EXLOUD](https://github.com/EXLOUD)
+
+## ⭐ Support
+
+If you find this project helpful, please consider giving it a star on GitHub!
+
+---
+
+## 📊 Project Stats
+
+![GitHub stars](https://img.shields.io/github/stars/EXLOUD/AppX-Package-Installer?style=social)
+![GitHub forks](https://img.shields.io/github/forks/EXLOUD/AppX-Package-Installer?style=social)
+![GitHub issues](https://img.shields.io/github/issues/EXLOUD/AppX-Package-Installer)
+![GitHub license](https://img.shields.io/github/license/EXLOUD/AppX-Package-Installer)
+![Windows](https://img.shields.io/badge/OS-Windows%2010%2F11-blue)
+![.NET](https://img.shields.io/badge/.NET-Framework%204.7.2-purple)
+
+*Simple tool for installing Windows packages with style and ease.*

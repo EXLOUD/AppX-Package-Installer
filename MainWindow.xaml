@@ -1,0 +1,365 @@
+﻿<Window x:Class="AppxInstaller.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AppX Package Installer" 
+        
+        MinHeight="463"
+        MinWidth="412" 
+        
+        Height="463" 
+        Width="412"   
+        
+        MaxHeight="700"
+        MaxWidth="666"
+        
+        WindowStartupLocation="CenterScreen"
+        AllowDrop="True" Drop="Window_Drop" DragEnter="Window_DragEnter" DragOver="Window_DragOver"
+        Background="Transparent"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResizeWithGrip">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+        <LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="Green" Offset="0"/>
+            <GradientStop Color="#FFA29BFE" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="CardGradient" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#2D3038" Offset="0.25"/>
+            <GradientStop Color="#30333B" Offset="0.45"/>
+            <GradientStop Color="#33363F" Offset="0.75"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="WindowHeaderGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FF2D3038" Offset="0"/>
+            <GradientStop Color="#FF33363F" Offset="1"/>
+        </LinearGradientBrush>
+
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardGradient}"/>
+            <Setter Property="BorderBrush" Value="#33FFFFFF"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="CornerRadius" Value="38"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" BlurRadius="30" ShadowDepth="12" Opacity="10.4"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="WindowButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="15">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#20FFFFFF"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#30FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource WindowButtonStyle}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E81123"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#C50E1F"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CustomTooltipStyle" TargetType="ToolTip">
+            <Setter Property="Background" Value="{StaticResource CardGradient}"/>
+            <Setter Property="BorderBrush" Value="#33FFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToolTip">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="3" Opacity="0.5"/>
+                            </Border.Effect>
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Storyboard x:Key="LoadingAnimation" RepeatBehavior="Forever">
+            <DoubleAnimation Storyboard.TargetName="LoadingSpinner"
+                             Storyboard.TargetProperty="RenderTransform.Angle"
+                             From="0" To="360" Duration="0:0:1.5">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <Storyboard x:Key="CheckmarkAnimation">
+            <DoubleAnimation Storyboard.TargetName="SuccessCheckmark"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.2"/>
+            <DoubleAnimation Storyboard.TargetName="SuccessCheckmark"
+                             Storyboard.TargetProperty="RenderTransform.ScaleX"
+                             From="0.5" To="1" Duration="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseOut" Amplitude="0.3"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="SuccessCheckmark"
+                             Storyboard.TargetProperty="RenderTransform.ScaleY"
+                             From="0.5" To="1" Duration="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseOut" Amplitude="0.3"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <Storyboard x:Key="HideCheckmarkAnimation">
+            <DoubleAnimation Storyboard.TargetName="SuccessCheckmark"
+                             Storyboard.TargetProperty="Opacity"
+                             From="1" To="0" Duration="0:0:0.2"/>
+        </Storyboard>
+
+        <Storyboard x:Key="SuccessStatesFadeOutAnimation" Completed="SuccessStatesFadeOutAnimation_Completed">
+            <DoubleAnimation Storyboard.TargetName="SuccessStatePanel"
+                             Storyboard.TargetProperty="Opacity"
+                             From="1" To="0" Duration="0:0:0.4">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <Storyboard x:Key="EmptyStateFadeInAnimation">
+            <DoubleAnimation Storyboard.TargetName="EmptyStatePanel"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+    </Window.Resources>
+
+    <Border Background="AliceBlue" 
+            CornerRadius="15" 
+            BorderBrush="#33FFFFFF" 
+            BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="8" Opacity="0.6"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" 
+                    Background="{StaticResource WindowHeaderGradient}" 
+                    CornerRadius="15,15,0,0"
+                    MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" 
+                               Text="AppX Package Installer" 
+                               Foreground="White" 
+                               FontSize="12" 
+                               FontWeight="Normal"
+                               VerticalAlignment="Center" 
+                               Margin="15,0,0,0"/>
+
+                    <StackPanel Grid.Column="1" 
+                                Orientation="Horizontal" 
+                                Margin="0,5,10,5">
+
+                        <Button x:Name="MinimizeButton" 
+                                Style="{StaticResource WindowButtonStyle}"
+                                Content="&#xE921;" 
+                                Click="MinimizeButton_Click" 
+                                Margin="0,0,5,0"/>
+
+                        <Button x:Name="CloseButton" 
+                                Style="{StaticResource CloseButtonStyle}"
+                                Content="&#xE8BB;" 
+                                Click="CloseButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="1" Style="{StaticResource CardStyle}" Cursor="Hand" Padding="30,20" Margin="29,25" CornerRadius="20"
+                MouseLeftButtonUp="Border_MouseLeftButtonUp">
+                <Border.ToolTip>
+                    <ToolTip Style="{StaticResource CustomTooltipStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Simple tool for installing Windows packages" Margin="0,0,0,20"/>
+                            <TextBlock Text="If you like my work, then visit my profile : " FontSize="13" Margin="0,0,0,2"/>
+                            <TextBlock Text="https://github.com/EXLOUD" 
+                                       FontSize="15" 
+                                       FontStyle="Italic" 
+                                       TextAlignment="Center"
+                                       Margin="0,0,0,20"/>
+                            <TextBlock Text="Click on button for open Github profile"/>
+                        </StackPanel>
+                    </ToolTip>
+                </Border.ToolTip>
+                <TextBlock Text=": AppX Package Installer :" 
+              FontSize="25" FontWeight="Light" Foreground="White"
+              HorizontalAlignment="Center">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="#FF6C5CE7" BlurRadius="10" ShadowDepth="0" Opacity="0.5"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+            </Border>
+
+            <Border Grid.Row="2" Style="{StaticResource CardStyle}" Margin="30,0,30,20">
+                <Border.ToolTip>
+                    <ToolTip Style="{StaticResource CustomTooltipStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Supported formats:" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <TextBlock Text="• .appx - Application Package"/>
+                            <TextBlock Text="• .appxbundle - Bundle Package"/>
+                            <TextBlock Text="• .msix - Modern Package"/>
+                            <TextBlock Text="• .msixbundle - Modern Bundle"/>
+                            <TextBlock Text="Just drag and drop your files here!" Margin="0,10,0,0" FontStyle="Italic"/>
+                        </StackPanel>
+                    </ToolTip>
+                </Border.ToolTip>
+                <Grid>
+                    <StackPanel x:Name="EmptyStatePanel" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"
+                               Visibility="Visible"
+                               Opacity="1">
+
+                        <Path Width="48" Height="52" Fill="White" Margin="0,0,0,0"
+                              Data="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" Stretch="Fill"/>
+
+                        <TextBlock Text="Drag &amp; Drop" FontSize="32" FontWeight="Light" 
+                                  Foreground="White" HorizontalAlignment="Center">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="#FF6C5CE7" BlurRadius="10" ShadowDepth="0" Opacity="0.3"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+
+                        <TextBlock Text="Drop your AppX packages here" 
+                                  FontSize="16" Foreground="#AAFFFFFF" 
+                                  HorizontalAlignment="Center" Margin="0,10,0,0"
+                                  TextWrapping="Wrap" TextAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel x:Name="LoadingStatePanel" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"
+                               Visibility="Collapsed">
+
+                        <Grid Width="80" Height="80" Margin="0,0,0,20">
+                            <Ellipse Width="80" Height="80" 
+                                     Stroke="#33FFFFFF" StrokeThickness="2"/>
+
+                            <Path x:Name="LoadingSpinner" 
+                                  Width="80" Height="80" 
+                                  Stroke="{StaticResource PrimaryGradient}" 
+                                  StrokeThickness="4"
+                                  Data="M 40,4 A 36,36 0 0,1 76,40"
+                                  RenderTransformOrigin="0.5,0.5">
+                                <Path.RenderTransform>
+                                    <RotateTransform Angle="0"/>
+                                </Path.RenderTransform>
+                            </Path>
+                        </Grid>
+
+                        <TextBlock Text="Installing packages..." FontSize="18" FontWeight="Light" 
+                                  Foreground="White" HorizontalAlignment="Center">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="#FF6C5CE7" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+
+                        <TextBlock x:Name="InstallationStatusText" 
+                                  Text="Preparing installation..." 
+                                  FontSize="14" Foreground="#AAFFFFFF" 
+                                  HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel x:Name="SuccessStatePanel" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"
+                               Visibility="Collapsed"
+                               Opacity="1">
+
+                        <Grid Width="80" Height="80" Margin="0,0,0,20">
+                            <Ellipse Width="80" Height="80" 
+                                     Fill="{StaticResource PrimaryGradient}" 
+                                     Opacity="0.2"/>
+                            <Ellipse Width="80" Height="80" 
+                                     Stroke="{StaticResource PrimaryGradient}" 
+                                     StrokeThickness="3"/>
+
+                            <Path x:Name="SuccessCheckmark"
+                                  Width="48"
+                                  Height="48"
+                                  Stroke="White"
+                                  StrokeThickness="5"
+                                  Fill="Transparent"
+                                  Opacity="0"
+                                  Data="M 12,24 L 20,32 L 40,16"
+                                  RenderTransformOrigin="0.5,0.5">
+                                <Path.RenderTransform>
+                                    <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                </Path.RenderTransform>
+                            </Path>
+                        </Grid>
+
+                        <TextBlock Text="Installation completed!" FontSize="18" FontWeight="Light" 
+                                  Foreground="White" HorizontalAlignment="Center">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="#FF6C5CE7" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+
+                        <TextBlock Text="All packages installed successfully" 
+                                  FontSize="14" Foreground="#AAFFFFFF" 
+                                  HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
