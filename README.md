@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://github.com/EXLOUD/AppX-Package-Installer/releases"><img src="https://img.shields.io/github/v/release/EXLOUD/AppX-Package-Installer?label=version" /></a>
   <a href="https://github.com/EXLOUD/AppX-Package-Installer/issues"><img alt="Issues" src="https://img.shields.io/github/issues/EXLOUD/AppX-Package-Installer?color=F48D73" /></a>
-  <img src="https://img.shields.io/badge/.NET%20Framework-4.7.2-512BD4?logo=dotnet&logoColor=white" />
+  <img src="https://img.shields.io/badge/.NET%20Framework-4.8.1-512BD4?logo=dotnet&logoColor=white" />
   <a href="https://github.com/EXLOUD/AppX-Package-Installer/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/EXLOUD/AppX-Package-Installer.svg" /></a>
 </p>
 
