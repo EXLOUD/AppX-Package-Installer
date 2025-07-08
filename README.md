@@ -1,5 +1,5 @@
 <p align="center">
- <img width="120px" src="assets/AppX_Installer.gif" align="center" alt="AppX Package Installer" />
+ <img width="220px" src="assets/AppX_Installer.gif" align="center" alt="AppX Package Installer" />
  <h2 align="center">AppX Package Installer</h2>
  <p align="center">Modern MSIX/AppX Package Installer for Windows 10/11</p>
 </p>
