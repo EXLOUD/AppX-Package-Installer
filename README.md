@@ -1,3 +1,15 @@
+<div align="center">
+ 
+### 👀 Repository Views
+
+<img alt="count" src="https://count.getloli.com/get/@:EXLOUD-APPX-TOOL?theme=rule34" />
+
+**⭐ If this tool helped you, please consider giving it a star! ⭐**
+
+</div>
+
+---
+
 <p align="center">
  <img width="220px" src="assets/AppX_Installer.gif" align="center" alt="AppX Package Installer" />
  <h2 align="center">AppX Package Installer</h2>
